@@ -1,7 +1,7 @@
 const express = require("express");
 const { ArduinoData } = require("./serial");
 const router = express.Router();
-const db = require("./connection");
+const {getConnAzure} = require('./connection');
 
 router.get("/", (request, response, next) => {
   let sum = ArduinoData.List.reduce((a, b) => a + b, 0);
@@ -17,13 +17,14 @@ router.get("/", (request, response, next) => {
 router.post("/sendData", (request, response) => {
   let temperatura = ArduinoData.List[ArduinoData.List.length - 1];
 
-  var sql = `INSERT INTO dados(Temperatura, fkArea, fkSensor, fkEmpresa) VALUES(?)`;
-  let values = [temperatura, 1, 1, 1];
+  temperatura = temperatura.toFixed(1)
 
-  db.query(sql, [values], function (err, result) {
-    if (err) throw err;
-    console.log("Medidas inseridas: " + result.affectedRows);
-  });
+  // let values = [temperatura, 1, 4, 1];
+  var sql = `Insert INTO Dados(Temperatura, fkSensor, fkAreaSensor, fkAreaEmpresaSensor) VALUES('${temperatura}', 1, 4, 1)`;
+  // let values2 = [temperatura, 2, 5, 1];
+
+  getConnAzure(sql).then(val=>console.log(val))
+
   response.sendStatus(200);
 });
 
