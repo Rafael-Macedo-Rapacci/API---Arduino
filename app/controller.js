@@ -19,9 +19,10 @@ router.post("/sendData", (request, response) => {
 
   temperatura = temperatura.toFixed(1)
 
-  // let values = [temperatura, 1, 4, 1];
-  var sql = `Insert INTO Dados(Temperatura, fkSensor, fkAreaSensor, fkAreaEmpresaSensor) VALUES('${temperatura}', 1, 4, 1)`;
-  // let values2 = [temperatura, 2, 5, 1];
+  var sql = `Insert INTO Dados(Temperatura, fkSensor, fkAreaSensor, fkAreaEmpresaSensor) VALUES
+  ('${temperatura}', 1, 4, 1),
+  ('${Number(temperatura) + 2}', 2, 5, 1);
+  `;
 
   getConnAzure(sql).then(val=>console.log(val))
 
